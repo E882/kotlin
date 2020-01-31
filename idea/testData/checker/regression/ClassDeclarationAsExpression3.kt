@@ -1,9 +1,9 @@
 // FIR_COMPARISON
 
-fun f(<warning>i</warning>: Int = 3 < <error>class A {
+fun f(i: Int = 3 < <error descr="[SYNTAX_ERROR] Syntax error"><error descr="[SYNTAX_ERROR] Syntax error">class A {
     fun f() {
         f()
     }
-}</error>) {
+}</error></error>) {
 
 }
