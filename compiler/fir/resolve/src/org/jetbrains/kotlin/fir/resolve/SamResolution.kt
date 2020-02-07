@@ -124,7 +124,7 @@ class FirSamResolverImpl(
                 source = typeParameter.source
                 session = firSession
                 name = typeParameter.name
-                this.symbol = FirTypeParameterSymbol()
+                this.symbol = FirTypeParameterSymbol(name)
                 variance = Variance.INVARIANT
                 isReified = false
                 annotations += typeParameter.annotations

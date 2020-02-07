@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.fir.deserialization
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirTypeParametersOwner
 import org.jetbrains.kotlin.fir.declarations.addDefaultBoundIfNecessary
+import org.jetbrains.kotlin.fir.declarations.builder.FirTypeParameterBuilder
 import org.jetbrains.kotlin.fir.declarations.builder.buildTypeParameter
 import org.jetbrains.kotlin.fir.resolve.toTypeProjection
 import org.jetbrains.kotlin.fir.symbols.ConeClassLikeLookupTag
@@ -35,6 +36,44 @@ class FirTypeDeserializer(
     typeParameterProtos: List<ProtoBuf.TypeParameter>,
     val parent: FirTypeDeserializer?
 ) {
+    private val typeParameterDescriptors: Map<Int, FirTypeParameterSymbol> = if (typeParameterProtos.isNotEmpty()) {
+        LinkedHashMap<Int, FirTypeParameterSymbol>()
+    } else {
+        mapOf()
+    }
+
+    val ownTypeParameters: List<FirTypeParameterSymbol>
+        get() = typeParameterDescriptors.values.toList()
+
+    init {
+        if (typeParameterProtos.isNotEmpty()) {
+            val result = typeParameterDescriptors as LinkedHashMap<Int, FirTypeParameterSymbol>
+            val builders = mutableListOf<FirTypeParameterBuilder>()
+            for (proto in typeParameterProtos) {
+                if (!proto.hasId()) continue
+                val name = nameResolver.getName(proto.name)
+                val symbol = FirTypeParameterSymbol(name)
+                builders += FirTypeParameterBuilder().apply {
+                    session = this@FirTypeDeserializer.session
+                    this.name = name
+                    this.symbol = symbol
+                    variance = proto.variance.convertVariance()
+                    isReified = proto.reified
+                }
+                result[proto.id] = symbol
+            }
+
+            for ((index, proto) in typeParameterProtos.withIndex()) {
+                val builder = builders[index]
+                builder.apply {
+                    proto.upperBoundList.mapTo(bounds) {
+                        buildResolvedTypeRef { type = type(it) }
+                    }
+                    addDefaultBoundIfNecessary()
+                }.build()
+            }
+        }
+    }
 
     private fun computeClassifier(fqNameIndex: Int): ConeClassLikeLookupTag? {
         try {
@@ -60,10 +99,6 @@ class FirTypeDeserializer(
         typeParameterDescriptors[typeParameterId]?.toLookupTag() ?: parent?.typeParameterSymbol(typeParameterId)
 
 
-    private fun typeParameterSymbol(typeParameterId: Int): ConeTypeParameterLookupTag? =
-        typeParameterDescriptors[typeParameterId]?.toLookupTag() ?: parent?.typeParameterSymbol(typeParameterId)
-
-
     private fun ProtoBuf.TypeParameter.Variance.convertVariance(): Variance {
         return when (this) {
             ProtoBuf.TypeParameter.Variance.IN -> Variance.IN_VARIANCE
@@ -71,33 +106,6 @@ class FirTypeDeserializer(
             ProtoBuf.TypeParameter.Variance.INV -> Variance.INVARIANT
         }
     }
-
-    private val typeParameterDescriptors: Map<Int, FirTypeParameterSymbol> = if (typeParameterProtos.isNotEmpty()) {
-        val result = LinkedHashMap<Int, FirTypeParameterSymbol>()
-        for (proto in typeParameterProtos) {
-            if (!proto.hasId()) continue
-            val name = nameResolver.getName(proto.name)
-            val symbol = FirTypeParameterSymbol()
-            buildTypeParameter {
-                session = this@FirTypeDeserializer.session
-                this.name = name
-                this.symbol = symbol
-                variance = proto.variance.convertVariance()
-                isReified = proto.reified
-                proto.upperBoundList.mapTo(bounds) {
-                    buildResolvedTypeRef { type = type(it) }
-                }
-                addDefaultBoundIfNecessary()
-            }
-            result[proto.id] = symbol
-        }
-        result
-    } else {
-        mapOf()
-    }
-
-    val ownTypeParameters: List<FirTypeParameterSymbol>
-        get() = typeParameterDescriptors.values.toList()
 
 
     fun FirClassLikeSymbol<*>.typeParameters(): List<FirTypeParameterSymbol> =

@@ -173,7 +173,7 @@ class FirBuiltinSymbolProvider(val session: FirSession, val kotlinScopeProvider:
                                 buildTypeParameter {
                                     session = this@FirBuiltinSymbolProvider.session
                                     name = Name.identifier("P$it")
-                                    symbol = FirTypeParameterSymbol()
+                                    symbol = FirTypeParameterSymbol(name)
                                     variance = Variance.IN_VARIANCE
                                     isReified = false
                                     bounds += session.builtinTypes.nullableAnyType
@@ -184,7 +184,7 @@ class FirBuiltinSymbolProvider(val session: FirSession, val kotlinScopeProvider:
                             buildTypeParameter {
                                 session = this@FirBuiltinSymbolProvider.session
                                 name = Name.identifier("R")
-                                symbol = FirTypeParameterSymbol()
+                                symbol = FirTypeParameterSymbol(name)
                                 variance = Variance.OUT_VARIANCE
                                 isReified = false
                                 bounds += session.builtinTypes.nullableAnyType

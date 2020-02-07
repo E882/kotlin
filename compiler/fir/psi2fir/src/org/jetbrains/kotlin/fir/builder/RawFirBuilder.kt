@@ -1039,7 +1039,7 @@ class RawFirBuilder(session: FirSession, val baseScopeProvider: FirScopeProvider
                 source = parameter.toFirSourceElement()
                 session = baseSession
                 name = parameterName
-                symbol = FirTypeParameterSymbol()
+                symbol = FirTypeParameterSymbol(parameterName)
                 variance = parameter.variance
                 isReified = parameter.hasModifier(REIFIED_KEYWORD)
                 parameter.extractAnnotationsTo(this)

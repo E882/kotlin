@@ -131,7 +131,7 @@ class FirClassSubstitutionScope(
                 source = originalParameter.source
                 session = originalParameter.session
                 name = originalParameter.name
-                symbol = FirTypeParameterSymbol()
+                symbol = FirTypeParameterSymbol(name)
                 variance = originalParameter.variance
                 isReified = originalParameter.isReified
                 annotations += originalParameter.annotations

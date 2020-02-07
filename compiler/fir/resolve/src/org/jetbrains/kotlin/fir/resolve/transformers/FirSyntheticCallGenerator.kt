@@ -167,11 +167,12 @@ class FirSyntheticCallGenerator(
         // Synthetic function signature:
         //   fun <K> select(vararg values: K): K
         val functionSymbol = FirSyntheticFunctionSymbol(callableId)
-        val typeParameterSymbol = FirTypeParameterSymbol()
+        val name = Name.identifier("K")
+        val typeParameterSymbol = FirTypeParameterSymbol(name)
         val typeParameter =
             buildTypeParameter {
                 session = this@FirSyntheticCallGenerator.session
-                name = Name.identifier("K")
+                this.name = name
                 symbol = typeParameterSymbol
                 variance = Variance.INVARIANT
                 isReified = false
@@ -200,11 +201,12 @@ class FirSyntheticCallGenerator(
         //   fun <X> test(a: X) = a!!
         // `X` is not a subtype of `Any` and hence cannot satisfy `K` if it had an upper bound of `Any`.
         val functionSymbol = FirSyntheticFunctionSymbol(SyntheticCallableId.CHECK_NOT_NULL)
-        val typeParameterSymbol = FirTypeParameterSymbol()
+        val name = Name.identifier("K")
+        val typeParameterSymbol = FirTypeParameterSymbol(name)
         val typeParameter =
             buildTypeParameter {
                 session = this@FirSyntheticCallGenerator.session
-                name = Name.identifier("K")
+                this.name = name
                 symbol = typeParameterSymbol
                 variance = Variance.INVARIANT
                 isReified = false

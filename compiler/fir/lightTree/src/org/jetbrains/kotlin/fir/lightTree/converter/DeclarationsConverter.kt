@@ -1298,7 +1298,7 @@ class DeclarationsConverter(
             source = typeParameter.toFirSourceElement()
             session = baseSession
             name = identifier.nameAsSafeName()
-            symbol = FirTypeParameterSymbol()
+            symbol = FirTypeParameterSymbol(name)
             variance = typeParameterModifiers.getVariance()
             isReified = typeParameterModifiers.hasReified()
             annotations += typeParameterModifiers.annotations

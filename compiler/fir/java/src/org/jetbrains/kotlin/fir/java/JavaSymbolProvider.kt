@@ -75,7 +75,7 @@ class JavaSymbolProvider(
 
     private fun JavaTypeParameter.toFirTypeParameter(javaTypeParameterStack: JavaTypeParameterStack): FirTypeParameterBuilder {
         javaTypeParameterStack.getBuilder(this)?.let { return it }
-        val firSymbol = FirTypeParameterSymbol()
+        val firSymbol = FirTypeParameterSymbol(this@toFirTypeParameter.name)
         return FirTypeParameterBuilder().apply {
             session = this@JavaSymbolProvider.session
             name = this@toFirTypeParameter.name
