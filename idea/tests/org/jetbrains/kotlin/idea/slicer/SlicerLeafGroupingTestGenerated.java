@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2020 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -22,6 +22,11 @@ import java.util.regex.Pattern;
 public class SlicerLeafGroupingTestGenerated extends AbstractSlicerLeafGroupingTest {
     private void runTest(String testDataFilePath) throws Exception {
         KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    }
+
+    @TestMetadata("abstractFun.kt")
+    public void testAbstractFun() throws Exception {
+        runTest("idea/testData/slicer/inflow/abstractFun.kt");
     }
 
     public void testAllFilesPresentInInflow() throws Exception {
@@ -221,6 +226,11 @@ public class SlicerLeafGroupingTestGenerated extends AbstractSlicerLeafGroupingT
     @TestMetadata("nullsAndNotNulls.kt")
     public void testNullsAndNotNulls() throws Exception {
         runTest("idea/testData/slicer/inflow/nullsAndNotNulls.kt");
+    }
+
+    @TestMetadata("overrideFun.kt")
+    public void testOverrideFun() throws Exception {
+        runTest("idea/testData/slicer/inflow/overrideFun.kt");
     }
 
     @TestMetadata("overridingFunctionResult.kt")

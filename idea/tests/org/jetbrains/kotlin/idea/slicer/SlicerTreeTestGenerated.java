@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2020 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -26,6 +26,11 @@ public class SlicerTreeTestGenerated extends AbstractSlicerTreeTest {
 
     public void testAllFilesPresentInSlicer() throws Exception {
         KotlinTestUtils.assertAllTestsPresentInSingleGeneratedClass(this.getClass(), new File("idea/testData/slicer"), Pattern.compile("^(.+)\\.kt$"));
+    }
+
+    @TestMetadata("inflow/abstractFun.kt")
+    public void testInflow_AbstractFun() throws Exception {
+        runTest("idea/testData/slicer/inflow/abstractFun.kt");
     }
 
     @TestMetadata("inflow/anonymousFunBodyExpression.kt")
@@ -221,6 +226,11 @@ public class SlicerTreeTestGenerated extends AbstractSlicerTreeTest {
     @TestMetadata("inflow/nullsAndNotNulls.kt")
     public void testInflow_NullsAndNotNulls() throws Exception {
         runTest("idea/testData/slicer/inflow/nullsAndNotNulls.kt");
+    }
+
+    @TestMetadata("inflow/overrideFun.kt")
+    public void testInflow_OverrideFun() throws Exception {
+        runTest("idea/testData/slicer/inflow/overrideFun.kt");
     }
 
     @TestMetadata("inflow/overridingFunctionResult.kt")
